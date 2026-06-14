@@ -10,7 +10,7 @@ const app = express();
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:3001',
-  'https://kitestore.netlify.app',
+  'https://admirable-heliotrope-b455e3.netlify.app', // <-- YOUR CORRECT NETLIFY URL
   'https://kitestore.onrender.com'
 ];
 
