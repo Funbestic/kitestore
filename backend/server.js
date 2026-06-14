@@ -1,10 +1,33 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const cookieParser = require('cookie-parser');
+require('dotenv').config();
 
 const app = express();
-app.use(cors());
+
+// CORS configuration for production
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:3001',
+  'https://kitestore.netlify.app',
+  'https://kitestore.onrender.com'
+];
+
+app.use(cors({
+  origin: function(origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true
+}));
+
 app.use(express.json());
+app.use(cookieParser());
 
 // Import routes
 const userRoutes = require('./routes/userRoutes');
@@ -35,10 +58,12 @@ app.get('/', (req, res) => {
   res.json({ message: 'Kite API is running...' });
 });
 
-// MongoDB connection
-mongoose.connect('mongodb://127.0.0.1:27017/kite_ecommerce')
-  .then(() => console.log('MongoDB Connected Successfully'))
-  .catch(err => console.error('MongoDB Connection Failed:', err));
+// MongoDB connection - READ FROM ENVIRONMENT VARIABLE
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/kite_ecommerce';
+
+mongoose.connect(MONGODB_URI)
+  .then(() => console.log('✅ MongoDB Connected Successfully'))
+  .catch(err => console.error('❌ MongoDB Connection Failed:', err));
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
