@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import Hero from '../components/Hero';
 import ProductFilter from '../components/ProductFilter';
 import LoadingSkeleton from '../components/LoadingSkeleton';
+import { API_URL } from '../config';
 
 const HomePage = () => {
   const [allProducts, setAllProducts] = useState([]);
@@ -18,7 +19,7 @@ const HomePage = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/products');
+      const response = await axios.get(`${API_URL}/products`);
       setAllProducts(response.data);
       setFilteredProducts(response.data);
       

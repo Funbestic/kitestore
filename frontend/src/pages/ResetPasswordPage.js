@@ -1,8 +1,7 @@
-
-
 import { useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
+import { API_URL } from '../config';
 
 const ResetPasswordPage = () => {
   const { token } = useParams();
@@ -31,11 +30,9 @@ const ResetPasswordPage = () => {
     setMessage('');
     
     try {
-      const response = await axios.post(`http://localhost:5000/api/users/reset-password/${token}`, { password });
+      const response = await axios.post(`${API_URL}/users/reset-password/${token}`, { password });
       setMessage(response.data.message);
-      setTimeout(() => {
-        navigate('/login');
-      }, 3000);
+      setTimeout(() => navigate('/login'), 3000);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to reset password');
     }
@@ -78,9 +75,7 @@ const ResetPasswordPage = () => {
           )}
           
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              New Password
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
             <input
               type="password"
               value={password}
@@ -93,9 +88,7 @@ const ResetPasswordPage = () => {
           </div>
           
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Confirm New Password
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
             <input
               type="password"
               value={confirmPassword}
@@ -115,9 +108,7 @@ const ResetPasswordPage = () => {
           </button>
           
           <div className="text-center">
-            <Link to="/login" className="text-sm text-blue-600 hover:text-blue-500">
-              ← Back to Login
-            </Link>
+            <Link to="/login" className="text-sm text-blue-600 hover:text-blue-500">← Back to Login</Link>
           </div>
         </form>
       </div>

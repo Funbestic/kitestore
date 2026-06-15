@@ -1,11 +1,10 @@
- 
-
- import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import StarRating from '../components/StarRating';
 import { useWishlist } from '../context/WishlistContext';
 import toast from 'react-hot-toast';
+import { API_URL } from '../config';
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -16,7 +15,6 @@ const ProductDetails = () => {
   const [quantity, setQuantity] = useState(1);
   const [addedToCart, setAddedToCart] = useState(false);
   
-  // Review states
   const [reviews, setReviews] = useState([]);
   const [averageRating, setAverageRating] = useState(0);
   const [userRating, setUserRating] = useState(0);
@@ -25,13 +23,11 @@ const ProductDetails = () => {
   const [reviewSubmitted, setReviewSubmitted] = useState(false);
   const [reviewError, setReviewError] = useState('');
 
-  // Wishlist
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
 
-  // Wrap fetch functions with useCallback
   const fetchProduct = useCallback(async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/products/${id}`);
+      const response = await axios.get(`${API_URL}/products/${id}`);
       setProduct(response.data);
       setLoading(false);
     } catch (error) {
@@ -42,7 +38,7 @@ const ProductDetails = () => {
 
   const fetchReviews = useCallback(async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/reviews/product/${id}`);
+      const response = await axios.get(`${API_URL}/reviews/product/${id}`);
       setReviews(response.data);
     } catch (error) {
       console.error('Error fetching reviews:', error);
@@ -51,7 +47,7 @@ const ProductDetails = () => {
 
   const fetchAverageRating = useCallback(async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/reviews/product/${id}/average`);
+      const response = await axios.get(`${API_URL}/reviews/product/${id}/average`);
       setAverageRating(response.data.averageRating);
     } catch (error) {
       console.error('Error fetching average rating:', error);
@@ -63,7 +59,6 @@ const ProductDetails = () => {
     fetchReviews();
     fetchAverageRating();
     
-    // Get user name from localStorage if logged in
     const userInfo = localStorage.getItem('userInfo');
     if (userInfo) {
       const user = JSON.parse(userInfo);
@@ -88,7 +83,7 @@ const ProductDetails = () => {
     }
     
     try {
-      await axios.post('http://localhost:5000/api/reviews', {
+      await axios.post(`${API_URL}/reviews`, {
         productId: id,
         userName: userName,
         rating: userRating,
@@ -174,7 +169,6 @@ const ProductDetails = () => {
         ← Back to Products
       </button>
       
-      {/* Product Details */}
       <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-8">
         <div className="grid md:grid-cols-2 gap-8 p-6">
           <div className="relative">
@@ -193,7 +187,6 @@ const ProductDetails = () => {
           <div>
             <h1 className="text-3xl font-bold text-gray-800 mb-4">{product.name}</h1>
             
-            {/* Rating Display */}
             <div className="flex items-center gap-2 mb-4">
               <StarRating rating={averageRating} readonly={true} size="md" />
               <span className="text-gray-500 text-sm">
@@ -249,7 +242,6 @@ const ProductDetails = () => {
               </div>
             )}
             
-            {/* Buttons: Add to Cart + Wishlist */}
             <div className="flex gap-3">
               <button 
                 onClick={addToCart}
@@ -283,11 +275,9 @@ const ProductDetails = () => {
         </div>
       </div>
       
-      {/* Reviews Section */}
       <div className="bg-white rounded-xl shadow-lg p-6">
         <h2 className="text-2xl font-bold text-gray-800 mb-6">Customer Reviews</h2>
         
-        {/* Write a Review Form */}
         <div className="border-b pb-6 mb-6">
           <h3 className="text-lg font-semibold mb-4">Write a Review</h3>
           
@@ -326,7 +316,6 @@ const ProductDetails = () => {
           </form>
         </div>
         
-        {/* Reviews List */}
         {reviews.length === 0 ? (
           <div className="text-center py-8">
             <p className="text-gray-500">No reviews yet. Be the first to review this product!</p>

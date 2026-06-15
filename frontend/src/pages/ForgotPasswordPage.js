@@ -1,8 +1,7 @@
-
-
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { API_URL } from '../config';
 
 const ForgotPasswordPage = () => {
   const [email, setEmail] = useState('');
@@ -17,8 +16,8 @@ const ForgotPasswordPage = () => {
     setMessage('');
     
     try {
-      const response = await axios.post('http://localhost:5000/api/users/forgot-password', { email });
-      setMessage(response.data.message || 'Password reset email sent! Check the terminal for the reset link.');
+      const response = await axios.post(`${API_URL}/users/forgot-password`, { email });
+      setMessage(response.data.message || 'Password reset email sent!');
       setEmail('');
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to send reset email');
@@ -32,9 +31,7 @@ const ForgotPasswordPage = () => {
         <div className="text-center">
           <div className="text-5xl mb-4">🔐</div>
           <h2 className="text-3xl font-extrabold text-gray-900">Forgot Password?</h2>
-          <p className="mt-2 text-sm text-gray-600">
-            Enter your email address and we'll send you a link to reset your password.
-          </p>
+          <p className="mt-2 text-sm text-gray-600">Enter your email to receive a reset link.</p>
         </div>
         
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
@@ -63,9 +60,7 @@ const ForgotPasswordPage = () => {
           )}
           
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Email Address
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
             <input
               type="email"
               value={email}
@@ -85,9 +80,7 @@ const ForgotPasswordPage = () => {
           </button>
           
           <div className="text-center">
-            <Link to="/login" className="text-sm text-blue-600 hover:text-blue-500">
-              ← Back to Login
-            </Link>
+            <Link to="/login" className="text-sm text-blue-600 hover:text-blue-500">← Back to Login</Link>
           </div>
         </form>
       </div>

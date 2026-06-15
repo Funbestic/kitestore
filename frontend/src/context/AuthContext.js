@@ -1,7 +1,6 @@
- 
-
- import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 import axios from 'axios';
+import { API_URL } from '../config';
 
 const AuthContext = createContext();
 
@@ -37,7 +36,7 @@ export const AuthProvider = ({ children }) => {
       setError(null);
       console.log('Registering with backend:', { name, email });
       
-      const response = await axios.post('http://localhost:5000/api/users/register', {
+      const response = await axios.post(`${API_URL}/users/register`, {
         name,
         email,
         password
@@ -68,7 +67,7 @@ export const AuthProvider = ({ children }) => {
       setError(null);
       console.log('Logging in:', { email });
       
-      const response = await axios.post('http://localhost:5000/api/users/login', {
+      const response = await axios.post(`${API_URL}/users/login`, {
         email,
         password
       });
@@ -99,7 +98,7 @@ export const AuthProvider = ({ children }) => {
     try {
       setError(null);
       const token = user?.token;
-      const response = await axios.put('http://localhost:5000/api/users/profile', userData, {
+      const response = await axios.put(`${API_URL}/users/profile`, userData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (response.data) {
